@@ -25,14 +25,14 @@ const PageCocina = () => {
   }
 
 
-    const filteredData = data.filter(item =>
+    const filteredData = data ? data.filter(item =>
         item.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.order_number.toString().includes(searchTerm)
-    )
+    ) : []
        
 
     const fetchData = async () => {
-        const response = await fetch("https://boquiteo-garoo.koyeb.app/api/orders")
+        const response = await fetch("https://boquiteo-garoo.koyeb.app/api/kitchen/orders")
         const data = await response.json()
         if (data.status === 200) {
             setData(data.data)

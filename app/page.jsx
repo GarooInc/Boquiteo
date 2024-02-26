@@ -7,10 +7,10 @@ const PrincipalPage = () => {
     const [data , setData] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
 
-    const filteredData = data.filter(item =>
+    const filteredData = data ? data.filter(item =>
         item.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.order_number.toString().includes(searchTerm)
-    )
+    ) : []
        
 
     const fetchData = async () => {
@@ -46,10 +46,11 @@ const PrincipalPage = () => {
                     {
                         filteredData.map((item) => {
                             return (
-                                <div key={item._id} className='lg:w-1/4 lg:m-0 mx-4 w-full bg-white p-4 rounded-md border-2 border-dark-gray flex flex-col items-start justify-start gap-2'>
+                                <div key={item._id} className='lg:w-1/3 lg:m-0 mx-4 w-full bg-white p-4 rounded-md border-2 border-dark-gray flex flex-col items-start justify-start gap-2 h-[350px] overflow-y-auto'>
                                     <div className='flex flex-col'>
                                         <h1 className='text-xl font-bold'>Order #{item.order_number}</h1>
                                         <p className='text-l text-dark-gray uppercase'>{item.customer}</p>
+                                        <p className='text-l text-orange uppercase'>{item.status}</p>
                                     </div>
                                     <p className='text-lg'>{item.description}</p>
                                     <p className='text-lg'>{item.price}</p>
