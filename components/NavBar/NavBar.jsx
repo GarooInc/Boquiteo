@@ -15,7 +15,6 @@ const NavBar = () => {
     ]
 
     const navigateTo = (link) => {
-        console.log(link)
         router.push(link)
     }
 

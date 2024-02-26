@@ -37,10 +37,6 @@ const PageEntrega = () => {
         if (data.status === 200) {
             setData(data.data)
         }
-        else {
-            console.log("Error")
-        }
-        console.log(data)
     }
 
     const confirmOrder = async (id) => {    
@@ -59,24 +55,17 @@ const PageEntrega = () => {
         const data = await response.json()
         if (data.status === 200) {
             setRefreshIndicator(prev => prev + 1)
-            console.log('Updated')
-        }
-        else {
-            console.log('Error')
         }
     }
 
 
     const updateOrder = async (idItem, idOrder, orderStatus) => {
         let isReady = false
-        console.log(idItem, idOrder)
-        console.log(orderStatus)
         if (orderStatus === 'Listo') {
             isReady = false
         }
         else {
             isReady = true
-            console.log(isReady)
         }
         const response = await fetch(`https://boquiteo-garoo.koyeb.app/api/kitchen/orders/items`, {
             method: 'PUT',
@@ -92,16 +81,16 @@ const PageEntrega = () => {
         const data = await response.json()
         if (data.status === 200) {
             setRefreshIndicator(prev => prev + 1)
-            console.log('Updated')
-        }
-        else {
-            console.log('Error')
-        }            
+        }          
     }
         
 
     useEffect(() => {
-        fetchData()
+        setInterval(() => {
+            fetchData()
+
+        }
+        , 5000)
     }
     , [])
 

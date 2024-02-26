@@ -19,14 +19,15 @@ const PrincipalPage = () => {
         if (data.status === 200) {
             setData(data.data)
         }
-        else {
-            console.log("Error")
-        }
-        console.log(data)
+
     }
 
     useEffect(() => {
-        fetchData()
+        setInterval(() => {
+            fetchData()
+
+        }
+        , 5000)
     }
     , [])
 

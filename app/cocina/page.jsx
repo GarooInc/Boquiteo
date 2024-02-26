@@ -9,8 +9,8 @@ const PageCocina = () => {
     const [data , setData] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
     const [refreshIndicator, setRefreshIndicator] = useState(0)
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [currentAction, setCurrentAction] = useState(() => () => {});
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [currentAction, setCurrentAction] = useState(() => () => {})
   
     // Función para manejar la confirmación
   const handleConfirm = () => {
@@ -20,8 +20,8 @@ const PageCocina = () => {
 
   // Función para abrir el diálogo de confirmación con una acción específica
   const promptConfirm = (action) => {
-    setCurrentAction(() => action);
-    setIsDialogOpen(true);
+    setCurrentAction(() => action)
+    setIsDialogOpen(true)
   }
 
 
@@ -32,19 +32,15 @@ const PageCocina = () => {
        
 
     const fetchData = async () => {
+        console.log('Fetching data')
         const response = await fetch("https://boquiteo-garoo.koyeb.app/api/kitchen/orders")
         const data = await response.json()
         if (data.status === 200) {
             setData(data.data)
         }
-        else {
-            console.log("Error")
-        }
-        console.log(data)
     }
 
     const confirmOrder = async (id) => {    
-        console.log(id)    
         const response = await fetch (`https://boquiteo-garoo.koyeb.app/api/kitchen/orders`, {
             method: 'PUT',
             headers: {
@@ -59,24 +55,18 @@ const PageCocina = () => {
         const data = await response.json()
         if (data.status === 200) {
             setRefreshIndicator(prev => prev + 1)
-            console.log('Updated')
         }
-        else {
-            console.log('Error')
-        }
+
     }
 
 
     const updateOrder = async (idItem, idOrder, orderStatus) => {
         let isReady = false
-        console.log(idItem, idOrder)
-        console.log(orderStatus)
         if (orderStatus === 'Listo') {
             isReady = false
         }
         else {
             isReady = true
-            console.log(isReady)
         }
         const response = await fetch(`https://boquiteo-garoo.koyeb.app/api/kitchen/orders/items`, {
             method: 'PUT',
@@ -92,18 +82,21 @@ const PageCocina = () => {
         const data = await response.json()
         if (data.status === 200) {
             setRefreshIndicator(prev => prev + 1)
-            console.log('Updated')
         }
-        else {
-            console.log('Error')
-        }            
+        
     }
         
 
     useEffect(() => {
-        fetchData()
+        setInterval(() => {
+            fetchData()
+
+        }
+        , 5000)
     }
     , [])
+
+
 
     useEffect(() => {
         fetchData()
