@@ -4,6 +4,7 @@ import NavBar from '@/components/NavBar/NavBar'
 import { FaRegCircleCheck } from "react-icons/fa6"
 import { GiCancel } from "react-icons/gi"
 import ConfirmDialog from '@/components/ConfirmDialog.jsx/ConfirmDialog'
+import { DateTime } from 'luxon'
 
 const PageCocina = () => {
     const [data , setData] = useState([])
@@ -11,6 +12,8 @@ const PageCocina = () => {
     const [refreshIndicator, setRefreshIndicator] = useState(0)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [currentAction, setCurrentAction] = useState(() => () => {})
+    const [showPopup, setShowPopup] = useState(false)
+    const [popupMessage, setPopupMessage] = useState('')
   
     // Función para manejar la confirmación
   const handleConfirm = () => {
@@ -32,7 +35,7 @@ const PageCocina = () => {
        
 
     const fetchData = async () => {
-        console.log('Fetching data')
+        
         const response = await fetch("https://boquiteo-garoo.koyeb.app/api/kitchen/orders")
         const data = await response.json()
         if (data.status === 200) {
@@ -40,7 +43,8 @@ const PageCocina = () => {
         }
     }
 
-    const confirmOrder = async (id) => {    
+    const confirmOrder = async (id, line_items) => {   
+        const pendingItems = line_items.filter(item => item.status === 'Pendiente') 
         const response = await fetch (`https://boquiteo-garoo.koyeb.app/api/kitchen/orders`, {
             method: 'PUT',
             headers: {
@@ -55,6 +59,10 @@ const PageCocina = () => {
         const data = await response.json()
         if (data.status === 200) {
             setRefreshIndicator(prev => prev + 1)
+        }
+        else {
+            setPopupMessage("Los siguientes platillos no están listos: " + pendingItems.map(item => item.name).join(', '))
+            setShowPopup(true)
         }
 
     }
@@ -96,8 +104,6 @@ const PageCocina = () => {
     }
     , [])
 
-
-
     useEffect(() => {
         fetchData()
     }, [refreshIndicator])
@@ -117,9 +123,14 @@ const PageCocina = () => {
                 <div className='flex flex-wrap justify-center gap-4 w-full overflow-y-auto'>
                     {
                         filteredData.map((item) => {
+                            const timeOrderConfirmed = DateTime.fromISO(item.time_order_confirmed)
+                            const timeInGuatemala = DateTime.fromISO(timeOrderConfirmed).setZone('America/Guatemala').toFormat('HH:mm:ss')
                             return (
                                 <div key={item._id} className='lg:w-1/3 lg:m-0 mx-4 w-full bg-white p-4 rounded-md border-2 border-dark-gray flex flex-col items-start justify-start gap-2 h-[350px] overflow-y-auto'>
-                                    <div className='flex flex-col'>
+                                    <div className='flex flex-col w-full'>
+                                        <div className='flex justify-end w-full'>
+                                            <p className='text-lg text-orange'>Hora confirmación: {timeInGuatemala}</p>
+                                        </div>
                                         <h1 className='text-xl font-bold'>Order #{item.order_number}</h1>
                                         <p className='text-l text-dark-gray uppercase'>{item.customer}</p>
                                     </div>
@@ -127,7 +138,7 @@ const PageCocina = () => {
                                     <p className='text-lg'>{item.price}</p>
                                     {
                                         item.line_items.map((line_item, index) => {
-                                            const isItemReady = line_item.status === 'Listo'; // Asumiendo que 'listo' es un estado posible
+                                            const isItemReady = line_item.status === 'Listo'
                                             return (
                                                     <div className='flex justify-center items-center w-full'>
                                                         <div key={index} className='flex flex-col border-b-2 border-dark-gray w-full p-2'>
@@ -150,7 +161,7 @@ const PageCocina = () => {
                                         )
                                         
                                     }
-                                    <button className='text-white px-2 py-4 rounded-md w-full bg-gray flex justify-center items-center hover:bg-green-500' onClick={() => promptConfirm(() => confirmOrder(item.order_number))}>
+                                    <button className='text-white px-2 py-4 rounded-md w-full bg-gray flex justify-center items-center hover:bg-green-500' onClick={() => promptConfirm(() => confirmOrder(item.order_number, item.line_items))}>
                                         Completar Orden
                                     </button>
                                 </div>
@@ -159,6 +170,15 @@ const PageCocina = () => {
                     )      
                     }
                 </div>
+                {
+                    showPopup && (
+                        <div className='fixed right-0 bg-gray p-10 m-4 rounded-md max-w-[300px]'>
+                            <p className='text-white font-bold my-2'>No se pudo completar la acción</p>
+                            <p className='text-white'>{popupMessage}</p>
+                            <button className='text-white p-2 mt-2 rounded-md bg-red-500 w-full' onClick={() => setShowPopup(false)}>Cerrar</button>
+                        </div>
+                    )
+                }
             </div>
         </div>
         <ConfirmDialog
