@@ -148,6 +148,17 @@ const PageCocina = () => {
                                                                 <p className='text-lg'>Qty: {line_item.quantity}</p>
                                                                 <p className='text-lg font-bold'>Q{line_item.price}</p>
                                                             </div>
+                                                            {line_item.variant && <p className='text-lg text-orange'>Variante: {line_item.variant}</p>}
+                                                            {line_item.options && <p className='text-lg text-gray'>
+                                                                {line_item.options.map((option, index) => {
+                                                                    return (
+                                                                        <p key={index} className='text-lg text-black'>{option}</p>
+                                                                    )
+                                                                }
+                                                                )
+                                                            }
+                                                            </p>}
+                                                            {line_item.comments && <p className='text-lg text-gray'>{line_item.comments}</p>}
                                                             <p className='text-lg'>Status Platillo: {line_item.status}</p>
                                                         </div>
                                                         <button className={`text-white p-2 rounded-md h-20 w-20 flex justify-center items-center ${isItemReady ? "bg-red-500" : "bg-green-500"} hover:brightness-110`}

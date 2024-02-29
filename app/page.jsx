@@ -51,7 +51,7 @@ const PrincipalPage = () => {
                                     <div className='flex flex-col'>
                                         <h1 className='text-xl font-bold'>Order #{item.order_number}</h1>
                                         <p className='text-l text-dark-gray uppercase'>{item.customer}</p>
-                                        <p className='text-l text-orange uppercase'>{item.status}</p>
+                                        <p className={`text-lg uppercase ${item.status === 'Orden completada' ? 'text-green-500' : 'text-gray'}`}>{item.status}</p>
                                     </div>
                                     <p className='text-lg'>{item.description}</p>
                                     <p className='text-lg'>{item.price}</p>
@@ -65,6 +65,17 @@ const PrincipalPage = () => {
                                                         <p className='text-lg font-bold'>Qty: {line_item.quantity}</p>
                                                         <p className='text-lg font-bold'>Q{line_item.price}</p>
                                                     </div>
+                                                    {line_item.variant && <p className='text-lg text-orange'>Variante: {line_item.variant}</p>}
+                                                    {line_item.options && <p className='text-lg text-gray'>
+                                                        {line_item.options.map((option, index) => {
+                                                            return (
+                                                                <p key={index} className='text-lg text-gray'>{option}</p>
+                                                            )
+                                                        }
+                                                        )
+                                                    }
+                                                    </p>}
+                                                    {line_item.comments && <p className='text-lg text-gray'>Comentarios: {line_item.comments}</p>}
                                                     <p className='text-lg text-dark-gray'>Status: {line_item.status}</p>
                                                 </div>
                                             )
