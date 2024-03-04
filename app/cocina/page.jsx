@@ -172,6 +172,11 @@ const PageCocina = () => {
                                         )
                                         
                                     }
+                                    {
+                                        item.comments && (
+                                            <p className='text-lg bg-light-gray text-black p-2 w-full rounded-lg flex flex-col'><span className='font-bold'>Comentario:</span>{item.comments}</p>
+                                        )
+                                    }
                                     <button className='text-white px-2 py-4 rounded-md w-full bg-gray flex justify-center items-center hover:bg-green-500' onClick={() => promptConfirm(() => confirmOrder(item.order_number, item.line_items))}>
                                         Completar Orden
                                     </button>
