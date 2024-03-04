@@ -24,9 +24,9 @@ const NavBar = () => {
     }
 
   return (
-    <div className='lg:w-1/3 lg:h-full w-full'>
-        <img src='/assets/logoboquiteo.png' alt='logo' className='w-1/2 m-auto' />
-        <div className='flex flex-col gap-6'>
+    <div className='lg:h-[200px] w-full flex lg:flex-row flex-col  justify-center items-center'>
+        <img src='/assets/logoboquiteo.png' alt='logo' className='w-1/5 h-[100px] m-auto object-cover' />
+        <div className='flex flex-col lg:flex-row gap-6 p-10 w-full lg:w-4/5'>
             {
                 menu.map((item, index) => {
                     const buttonClass = isActive(item.link)

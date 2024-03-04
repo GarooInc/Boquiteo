@@ -110,9 +110,9 @@ const PageCocina = () => {
 
   return (
     <div className='w-full isolate h-screen'>
-        <div className='flex h-full lg:flex-row flex-col'>
+        <div className='flex h-full flex-col'>
             <NavBar />
-            <div className='w-full bg-light-gray h-full flex flex-col justify-start items-center'>
+            <div className='w-full bg-light-gray flex flex-col justify-start items-center'>
                 <input
                     type='text'
                     placeholder='Buscar orden'
@@ -120,13 +120,13 @@ const PageCocina = () => {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <div className='flex flex-wrap justify-center gap-4 w-full overflow-y-auto'>
+                <div className="px-8 columns-1 gap-5 sm:columns-2 sm:gap-8 md:columns-2 lg:columns-3 [&>div:not(:first-child)]:mt-8">
                     {
                         filteredData.map((item) => {
                             const timeOrderConfirmed = DateTime.fromISO(item.time_order_confirmed)
                             const timeInGuatemala = DateTime.fromISO(timeOrderConfirmed).setZone('America/Guatemala').toFormat('HH:mm:ss')
                             return (
-                                <div key={item._id} className='lg:w-1/3 lg:m-0 mx-4 w-full bg-white p-4 rounded-md border-2 border-dark-gray flex flex-col items-start justify-start gap-2 h-[350px] overflow-y-auto'>
+                                <div key={item._id} className='lg:w-full lg:m-0 mx-4 w-full bg-white p-4 rounded-md border-2 border-dark-gray flex flex-col items-start justify-start gap-2  overflow-y-auto'>
                                     <div className='flex flex-col w-full'>
                                         <div className='flex justify-end w-full'>
                                             <p className='text-lg text-orange'>Hora confirmación: {timeInGuatemala}</p>
