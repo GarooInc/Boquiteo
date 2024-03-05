@@ -14,6 +14,8 @@ const PageCocina = () => {
     const [currentAction, setCurrentAction] = useState(() => () => {})
     const [showPopup, setShowPopup] = useState(false)
     const [popupMessage, setPopupMessage] = useState('')
+    const [currentTime, setCurrentTime] = useState(DateTime.now().setZone('America/Guatemala'));
+
   
     // Función para manejar la confirmación
   const handleConfirm = () => {
@@ -108,6 +110,14 @@ const PageCocina = () => {
         fetchData()
     }, [refreshIndicator])
 
+    useEffect(() => {
+        const timer = setInterval(() => {
+          setCurrentTime(DateTime.now().setZone('America/Guatemala'));
+        }, 1000);
+    
+        return () => clearInterval(timer)
+      }, [])
+
   return (
     <div className='w-full isolate h-screen'>
         <div className='flex h-full flex-col'>
@@ -124,12 +134,24 @@ const PageCocina = () => {
                     {
                         filteredData.map((item) => {
                             const timeOrderConfirmed = DateTime.fromISO(item.time_order_confirmed)
-                            const timeInGuatemala = DateTime.fromISO(timeOrderConfirmed).setZone('America/Guatemala').toFormat('HH:mm:ss')
+                            const duration = currentTime.diff(timeOrderConfirmed, ['minutes']);
+                            const minutes = duration.as('minutes');
+
+                            // Determina el color basado en los minutos transcurridos
+                            let textColor;
+                            if (minutes < 15) {
+                                textColor = 'text-green-500'
+                            } else if (minutes >= 15 && minutes <= 20) {
+                                textColor = 'text-yellow-500'
+                            } else {
+                                textColor = 'text-red-500' 
+                            }
+                            const durationFormatted = duration.toFormat("hh:mm:ss")
                             return (
                                 <div key={item._id} className='lg:w-full lg:m-0 mx-4 w-full bg-white p-4 rounded-md border-2 border-dark-gray flex flex-col items-start justify-start gap-2  overflow-y-auto'>
                                     <div className='flex flex-col w-full'>
                                         <div className='flex justify-end w-full'>
-                                            <p className='text-lg text-orange'>Hora confirmación: {timeInGuatemala}</p>
+                                            <p className={`text-lg ${textColor}`}>Tiempo en cocina: {durationFormatted}</p>
                                         </div>
                                         <h1 className='text-xl font-bold'>Order #{item.order_number}</h1>
                                         <p className='text-l text-dark-gray uppercase'>{item.customer}</p>
@@ -162,7 +184,7 @@ const PageCocina = () => {
                                                             <p className='text-lg'>Status Platillo: {line_item.status}</p>
                                                         </div>
                                                         <button className={`text-white p-2 rounded-md h-20 w-20 flex justify-center items-center ${isItemReady ? "bg-red-500" : "bg-green-500"} hover:brightness-110`}
-                                                        onClick={() => promptConfirm(() => updateOrder(line_item.item, item.order_number, line_item.status))}>
+                                                        onClick={() => updateOrder(line_item.item, item.order_number, line_item.status)}>
                                                         {isItemReady ? <GiCancel/> : <FaRegCircleCheck />}
                                                         </button>
                                                     </div>
