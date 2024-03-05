@@ -6,10 +6,13 @@ import NavBar from '@/components/NavBar/NavBar';
 const PrincipalPage = () => {
     const [data , setData] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
+    const [showDropdown, setShowDropdown] = useState(false)
+    const [orderStatus, setOrderStatus] = useState('')
 
     const filteredData = data ? data.filter(item =>
         item.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.order_number.toString().includes(searchTerm)
+    ).filter(item => orderStatus ? item.status === orderStatus : true
     ) : []
        
 
@@ -20,6 +23,10 @@ const PrincipalPage = () => {
             setData(data.data)
         }
 
+    }
+
+    const handleStatusChange = (e) => {
+        setOrderStatus(e.target.value)
     }
 
     useEffect(() => {
@@ -36,13 +43,50 @@ const PrincipalPage = () => {
         <div className='flex h-full  flex-col'>
             <NavBar />
             <div className='w-full bg-light-gray h-full flex flex-col justify-start items-center'>
-                <input
-                    type='text'
-                    placeholder='Buscar orden'
-                    className='w-2/3 m-4 p-2 rounded-md border-2 border-dark-gray'
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
+            <div className='w-full flex justify-center items-center h-[180px]'>
+                    <input
+                        type='text'
+                        placeholder='Buscar orden'
+                        className='w-2/3 m-4 p-2 rounded-md'
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <div className='flex flex-col items-center'>
+                        <button onClick={()=> setShowDropdown(!showDropdown)}  className="text-white bg-orange focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800" type="button">Filtrar 
+                            {
+                                showDropdown ? 
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M10 7.414l6.293 6.293 1.414-1.414L10 4.586 2.293 12.293l1.414 1.414L10 7.414z" clipRule="evenodd" />
+                                </svg>
+                                : <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M10 12.586l-6.293-6.293-1.414 1.414L10 15.414l7.707-7.707-1.414-1.414L10 12.586z" clipRule="evenodd" />
+                                </svg>
+                            }
+                        </button>
+                        <div className={`${showDropdown ? 'block' : 'hidden'} p-2 z-10 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600`}>
+                            <ul class="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownRadioButton">
+                            <li>
+                            <div className="flex items-center">
+                                <input onChange={handleStatusChange} value="Esperando al repartidor" name="order-status" type="radio" className="focus:ring-blue-500 focus:bg-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600" checked={orderStatus === "ESPERANDO_AL_REPARTIDOR"} />
+                                <label className="ml-3">Esperando al repartidor</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div className="flex items-center">
+                                <input onChange={handleStatusChange} value="Confirmado" name="order-status" type="radio" className="focus:ring-blue-500 focus:bg-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600" checked={orderStatus === "CONFIRMADO"} />
+                                <label className="ml-3">Confirmado</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div className="flex items-center">
+                                <input onChange={handleStatusChange} value="Orden completada" name="order-status" type="radio" className="focus:ring-blue-500 focus:bg-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600" checked={orderStatus === "ORDEN_COMPLETADA"} />
+                                <label className="ml-3">Orden completada</label>
+                                </div>
+                            </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
                 <div className='px-8 columns-1 gap-5 sm:columns-2 sm:gap-8 md:columns-2 lg:columns-3 [&>div:not(:first-child)]:mt-8'>
                     {
                         filteredData.map((item) => {
