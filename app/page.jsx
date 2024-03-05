@@ -42,7 +42,7 @@ const PrincipalPage = () => {
     <div className='w-full isolate h-screen'>
         <div className='flex h-full  flex-col'>
             <NavBar />
-            <div className='w-full bg-light-gray h-full flex flex-col justify-start items-center'>
+            <div className='w-full bg-light-gray flex flex-col justify-start items-center'>
             <div className='w-full flex justify-center items-center h-[180px]'>
                     <input
                         type='text'
@@ -67,27 +67,33 @@ const PrincipalPage = () => {
                             <ul className="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownRadioButton">
                             <li>
                             <div className="flex items-center">
-                                <input onChange={handleStatusChange} value="Esperando al repartidor" name="order-status" type="radio" className="focus:ring-blue-500 focus:bg-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600" checked={orderStatus === "ESPERANDO_AL_REPARTIDOR"} />
+                                <input onChange={handleStatusChange} value="Esperando al repartidor" name="order-status" type="radio" className="focus:ring-blue-500 focus:bg-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600" checked={orderStatus === "Esperando al repartidor"} />
                                 <label className="ml-3">Esperando al repartidor</label>
                                 </div>
                             </li>
                             <li>
                                 <div className="flex items-center">
-                                <input onChange={handleStatusChange} value="Confirmado" name="order-status" type="radio" className="focus:ring-blue-500 focus:bg-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600" checked={orderStatus === "CONFIRMADO"} />
+                                <input onChange={handleStatusChange} value="Confirmado" name="order-status" type="radio" className="focus:ring-blue-500 focus:bg-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600" checked={orderStatus === "Confirmado"} />
                                 <label className="ml-3">Confirmado</label>
                                 </div>
                             </li>
                             <li>
                                 <div className="flex items-center">
-                                <input onChange={handleStatusChange} value="Orden completada" name="order-status" type="radio" className="focus:ring-blue-500 focus:bg-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600" checked={orderStatus === "ORDEN_COMPLETADA"} />
+                                <input onChange={handleStatusChange} value="Orden completada" name="order-status" type="radio" className="focus:ring-blue-500 focus:bg-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600" checked={orderStatus === "Orden completada"} />
                                 <label className="ml-3">Orden completada</label>
+                                </div>
+                            </li>
+                            <li>
+                                <div className="flex items-center">
+                                <input onChange={handleStatusChange} value="" name="order-status" type="radio" className="focus:ring-blue-500 focus:bg-blue-500 h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600" checked={orderStatus === ""} />
+                                <label className="ml-3">Todas</label>
                                 </div>
                             </li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div className='px-8 columns-1 gap-5 sm:columns-2 sm:gap-8 md:columns-2 lg:columns-3 [&>div:not(:first-child)]:mt-8'>
+                <div className='px-8 py-4 columns-1 gap-5 sm:columns-2 sm:gap-8 md:columns-2 lg:columns-3 [&>div:not(:first-child)]:mt-8'>
                     {
                         filteredData.map((item) => {
                             return (
